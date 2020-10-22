@@ -32,6 +32,14 @@ const routes = [
       name:'书架'
     },
     component: () => import('@/views/Bookshelf.vue')
+  },
+  {
+    path:'/novelDetail',
+    name:'NovelDetail',
+    meta:{
+      name:'小说详情'
+    },
+    component: () => import("@/views/NovelDetail.vue")
   }
 ]
 

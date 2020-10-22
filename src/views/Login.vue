@@ -3,7 +3,7 @@
         <div class="content">
             <div class="head">
                 <span class="iconfont icon-tuShuGuan"></span>
-                Login
+                {{title}}
             </div>
             <van-form @submit="onSubmit">
                 <van-field
@@ -22,11 +22,20 @@
                     :rules="[{ required: true, message: '请填写密码' }]"
                 />
                 <van-field
+                    v-model="sex"
+                    name="性别"
+                    label="性别"
+                    placeholder="性别"
+                    :rules="[{ required: true, message: '请填写性别' }]"
+                    v-if="registerFlag"
+                />
+                <van-field
                     v-model="email"
                     name="邮箱"
                     label="邮箱"
                     placeholder="邮箱"
                     :rules="[{ required: true, message: '请填写邮箱' }]"
+                    v-if="registerFlag"
                 />
                 <div style="margin: 16px;">
                     <van-button round block type="info" native-type="submit">
@@ -34,6 +43,7 @@
                     </van-button>
                 </div>
             </van-form>
+            <span class="register" @click="toRegister">{{type}}</span>
         </div>
     </div>
 </template>
@@ -41,15 +51,29 @@
 export default {
      data() {
         return {
+            title:'Login',//标题名称
             username: '',
             password: '',
             email: '',
+            sex: '',
+            registerFlag: false,
+            type:'前往注册'
         };
     },
     methods: {
         onSubmit(values) {
-        console.log('submit', values);
+            console.log('submit', values);
         },
+        toRegister() {
+            this.registerFlag = !this.registerFlag;
+            if(this.registerFlag) {
+                this.title = 'RegisterFlag';
+                this.type = '前往登录';
+            } else {
+                this.title = 'Login';
+                this.type = '前往注册';
+            }
+        }
     },
     }
 </script>
@@ -70,6 +94,9 @@ export default {
             .icon-tuShuGuan {
                 font-size: .5rem !important;
             }
+        }
+        .register {
+            font-size: .18rem !important;
         }
     }
     .login {
@@ -93,6 +120,13 @@ export default {
                     font-size: .15rem;
                     padding-right: .1rem;
                 }
+            }
+            .register {
+                display: flex;
+                justify-content: flex-end;
+                color: navy;
+                cursor: pointer;
+                font-size: .1rem;
             }
         }
     }

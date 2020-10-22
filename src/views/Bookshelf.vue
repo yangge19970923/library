@@ -1,12 +1,12 @@
 <template>
   <div class="Bookshelf">
-    <div class="Bookshelf-header">Book Shelf</div>
+    <ContentHeader :title="title"/>
     <div class="book-list">
       <div class="list" v-for="(item, index) in bookLists" :key="item.id">
         <div class="img">
           <el-image :src="item.imgUrl" alt="" lazy></el-image>
         </div>
-        <div class="info">
+        <div class="info" @click="goNovelDetail(item)">
           <p class="name">{{item.name}}</p>
           <p class="author">{{item.author}}</p>
           <p class="synopsis">{{item.synopsis.length > 30 ? item.synopsis.slice(0,30) + '...' : item.synopsis}}</p>
@@ -20,13 +20,15 @@
 </template>
 
 <script>
-
+import ContentHeader from "@/components/contentHeader.vue";
 export default {
   name: 'Home',
   components: {
+    ContentHeader
   },
   data() {
     return {
+      title:'Book Shelf',
       bookLists:[
         {
           id:1,
@@ -49,6 +51,9 @@ export default {
     }
   },
   methods:{
+    goNovelDetail(item) {
+      this.$router.push({name:"NovelDetail",params:{bookInfo:item}});
+    }
   }
 }
 </script>
@@ -57,9 +62,6 @@ export default {
 @media screen and (max-width: 780px){
   .Bookshelf {
     width: 100% !important;
-  }
-  .Bookshelf-header {
-    font-size: .4rem!important;
   }
   .el-image {
     width: .8rem!important;
@@ -89,13 +91,6 @@ export default {
   .Bookshelf {
     width: 80%;
     margin: 0 auto;
-    .Bookshelf-header {
-      font-size: .2rem;
-      padding: .15rem 0;
-      background-color: #f5f5f5;
-      border: .01rem solid #eee;
-      border-radius: .05rem .05rem 0 0;
-    }
     .book-list {
       border: .01rem solid #eee;
       border-bottom: none;
@@ -143,6 +138,7 @@ export default {
             background-color: skyblue;
             border-radius: 50%;
             font-size: .12rem;
+            cursor: pointer;
             }
         }
       }

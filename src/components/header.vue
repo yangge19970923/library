@@ -5,6 +5,7 @@
           <div class="gongNengList">
             <div class="list" v-for="(item, index) in gongNengList" :key="index" @click.stop="gongNengClick(item)">{{item.title}}</div>
           </div>
+          <div class="login" @click="search">Search</div>
           <div class="login" @click="login">Login</div>
         </div>
     </div>
@@ -43,6 +44,9 @@ export default {
       },
       gongNengClick(item) {
           this.$router.push(item.url,() => {},(e) => {});
+      },
+      search() {
+          this.$router.push("/search",() => {}, (e) => {});
       },
       login() {
           this.$router.push("/login",() => {}, (e) => {});

@@ -40,6 +40,38 @@ const routes = [
       name:'小说详情'
     },
     component: () => import("@/views/NovelDetail.vue")
+  },
+  {
+    path:'/search',
+    name:'Search',
+    meta: {
+      name:'搜索'
+    },
+    component: () => import("@/views/Search.vue")
+  },
+  {
+    path: '/rank',
+    name: 'Rank',
+    meta: {
+      name: '排行'
+    },
+    component: () => import("@/views/Rank.vue")
+  },
+  {
+    path: '/classification',
+    name:'Classification',
+    meta: {
+      name: '分类'
+    },
+    component: () => import("@/views/Classification.vue")
+  },
+  {
+    path: '/wapsort',
+    name: 'Wapsort',
+    meta: {
+      name: '详细分类'
+    },
+    component: () => import("@/views/Wapsort.vue")
   }
 ]
 

@@ -8,7 +8,9 @@ export default {
 </script>
 <style lang="less" scoped>
 @media screen and (max-width: 780px){
-    font-size: .4rem!important;
+    .home-header {
+        font-size: .5rem !important;
+    }
 }
 .home-header {
     font-size: .2rem;

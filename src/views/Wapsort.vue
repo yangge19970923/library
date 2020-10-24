@@ -1,6 +1,6 @@
 <template>
-  <div class="home">
-    <ContentHeader :title="title"/>
+  <div class="wapsort">
+    <ContentHeader :title="queryInfo.name"/>
     <BookList />
   </div>
 </template>
@@ -12,23 +12,25 @@ export default {
   name: 'Home',
   data() {
     return {
-      title: 'Home'
+      queryInfo: JSON.parse(this.$route.query.classification),
     }
   },
   components: {
     ContentHeader,
     BookList
   },
+  created() {
+  }
 }
 </script>
 
 <style lang="less" scoped>
 @media screen and (max-width: 780px){
-  .home {
+  .wapsort {
     width: 100% !important;
   }
 }
-  .home {
+  .wapsort {
     width: 80%;
     margin: 0 auto;
   }

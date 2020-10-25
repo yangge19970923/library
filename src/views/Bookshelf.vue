@@ -53,7 +53,7 @@ export default {
   methods:{
     goNovelDetail(item) {
       this.$router.push({name:"NovelDetail",params:{bookInfo:item}});
-    }
+    },
   }
 }
 </script>

@@ -2,7 +2,7 @@
   <div id="app">
     <el-container>
       <el-header>
-        <Header />
+        <Header/>
       </el-header>
       <el-main>
         <router-view/>
@@ -15,7 +15,14 @@ import Header from "@/components/header"
 export default {
  components:{
    Header
- }
+ },
+ data() {
+   return {
+   }
+ },
+ created() {
+   
+ },
 }
 </script>
 <style lang="less">
@@ -33,9 +40,13 @@ export default {
   .el-header {
     height: auto !important;
   }
+  .el-main {
+    padding: 0 !important;
+  }
 }
 .el-header {
   background-color: #f8f8f8;
+  padding: 0 !important;
 }
 
 </style>

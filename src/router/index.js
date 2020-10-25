@@ -72,6 +72,22 @@ const routes = [
       name: '详细分类'
     },
     component: () => import("@/views/Wapsort.vue")
+  },
+  {
+    path: '/novelContent',
+    name: 'NovelContent',
+    meta: {
+      name: '小说详情页面'
+    },
+    component: () => import("@/views/NovelContent.vue")
+  },
+  {
+    path: '/mNovelContent',
+    name:'MNovelContent',
+    meta: {
+      name: '移动端小说详情页面'
+    },
+    component: () => import("@/views/MNovelContent.vue")
   }
 ]
 
@@ -79,4 +95,8 @@ const router = new VueRouter({
   routes
 })
 
-export default router
+export default router;
+router.beforeEach((to, from, next) => {
+  // console.log(to);
+  next();
+})

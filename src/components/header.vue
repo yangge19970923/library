@@ -1,5 +1,5 @@
 <template>
-    <div class="header">
+    <div class="header" v-if="showFlag">
         <div class="container">
           <div class="logo" @click="goHome">Book Libiary</div>
           <div class="gongNengList">
@@ -11,6 +11,7 @@
     </div>
 </template>
 <script>
+import { state } from "vuex";
 export default {
      data() {
         return {
@@ -35,7 +36,8 @@ export default {
                     title: 'classification',
                     url: '/classification'
                 },
-            ]
+            ],
+            showFlag: true,
         }
   },
   methods:{
@@ -53,6 +55,14 @@ export default {
       }
   },
   created() {
+      //当是阅读页面移动端隐藏header组件
+  },
+  watch: {
+      $route(to,from) {
+          if(location.hash === "#/mNovelContent") {
+              this.showFlag = false;
+          }
+      }
   }
 }
 </script>

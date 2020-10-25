@@ -62,7 +62,7 @@ export default {
     methods:{
         goWapSort(item) {
             this.$router.push({name:'Wapsort',query:{classification: JSON.stringify(item)}},() => {},err => {});
-        }
+        },
     }
 }
 </script>

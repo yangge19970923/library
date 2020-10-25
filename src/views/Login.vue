@@ -73,9 +73,26 @@ export default {
                 this.title = 'Login';
                 this.type = '前往注册';
             }
+        },
+        //判断是移动端打开还是pc端
+        isMobile() {
+            let flag = true;
+            let userAgentInfo = navigator.userAgent;
+            let Agents = ["Android", "iPhone",
+                    "SymbianOS", "Windows Phone",
+                    "iPad", "iPod"];
+            Agents.forEach(item => {
+                if(userAgentInfo.indexOf(item) > 0) {
+                    flag = false;
+                    return;
+                }
+            })
         }
     },
+    created() {
+        this.isMobile();
     }
+}
 </script>
 <style lang="less" scoped>
     @media screen and(max-width: 1050px) {

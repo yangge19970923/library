@@ -10,7 +10,7 @@
                     <div class="title">{{bookInfoDetail.name}}</div>
                     <div class="author">
                         <span>作者：{{bookInfoDetail.author}}</span>
-                        <span class="action">动作：加入收藏</span>
+                        <span class="action" @click="collection">动作：加入收藏</span>
                     </div>
                     <div class="update"><span>最后更新：{{bookInfoDetail.updateTime}}</span><span>最新章节：{{bookInfoDetail.updateChapter}}</span></div>
                     <div class="synopsis">{{bookInfoDetail.synopsis}}</div>
@@ -18,7 +18,7 @@
             </div>
             <div class="chapter">
                 <dl>
-                    <dd v-for="item in bookInfoDetail.chapters" :key="item.id" @click="showDetail">{{ item.value }}</dd>
+                    <dd v-for="item in bookInfoDetail.chapters" :key="item.id" @click="showDetail(item)">{{ item.value }}</dd>
                 </dl>
             </div>
         </div>
@@ -50,12 +50,14 @@ export default {
         }
     },
     methods:{
+        collection() {
+            
+        },
         showDetail(item) {
-
+            this.$router.push({name:'NovelContent',query:{novelInfo: JSON.stringify(item)}},() => {}, err => {});
         }
     },
-    created() {
-    }
+    created() {}
 }
 </script>
 <style lang="less" scoped>

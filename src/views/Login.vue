@@ -37,6 +37,17 @@
                     :rules="[{ required: true, message: '请填写邮箱' }]"
                     v-if="registerFlag"
                 />
+                <van-field
+                    v-model="verCode"
+                    name="验证码"
+                    label="验证码"
+                    placeholder="验证码"
+                    :rules="[{ required: true, message: '请填写验证码' }]"
+                    v-if="!registerFlag"
+                    :right-icon="'data:image/png;base64,' + imgData"
+                >
+                </van-field>
+                
                 <div style="margin: 16px;">
                     <van-button round block type="info" native-type="submit">
                     提交
@@ -48,6 +59,8 @@
     </div>
 </template>
 <script>
+import axios from "axios";
+import { mapState, mapMutations } from "vuex";
 export default {
      data() {
         return {
@@ -56,13 +69,69 @@ export default {
             password: '',
             email: '',
             sex: '',
+            verCode: '',
             registerFlag: false,
-            type:'前往注册'
+            type:'前往注册',
+            imgData:''
         };
     },
+    computed: {
+        ...mapState({
+            
+        })
+    },
     methods: {
+        ...mapMutations({
+            SET_USERINFO: "user/SET_USERINFO",
+            SET_MOBILEFLAG: "config/SET_MOBILEFLAG",
+        }),
+        //请求图形验证码数据
+        getVerifyImg() {
+            this.$axios.get("pubilc/verifyImg").then(res => {
+                this.imgData = res.result;
+            }).catch(err => {
+                console.log(err);
+            })
+        },
         onSubmit(values) {
-            console.log('submit', values);
+            if(!this.registerFlag) {
+                this.$axios.get("pubilc/login",{
+                    params:{
+                        username: this.username,
+                        password:this.password,
+                        verCode:this.verCode
+                    }
+                }).then(res => {
+                    if(res.code === 1) {
+                        this.SET_USERINFO(res.data);
+                        this.$router.push("home",() => {}, err => {});
+                    } else {
+                        if(res.msg === "图形验证码错误") {
+                            this.getVerifyImg();
+                        }
+                    }
+                }).catch(err => {
+                    console.log(err);
+                })
+            } else {
+                this.$axios.post("pubilc/register",{
+                    username: this.username,
+                    password: this.password,
+                    email: this.email,
+                    sex: this.sex
+                }).then(res => {
+                    if(res) {
+                        console.log(res);
+                        this.$toast.success(res.msg);
+                        setTimeout(() => {
+                            this.registerFlag = !this.registerFlag;
+                        },1000); 
+                    }
+                }).catch(err => {
+                    console.log(err);
+                })
+            }
+            
         },
         toRegister() {
             this.registerFlag = !this.registerFlag;
@@ -71,33 +140,36 @@ export default {
                 this.type = '前往登录';
             } else {
                 this.title = 'Login';
-                this.type = '前往注册';
+                this.type = '前往注册'; 
             }
         },
-        //判断是移动端打开还是pc端
-        isMobile() {
-            let flag = true;
-            let userAgentInfo = navigator.userAgent;
-            let Agents = ["Android", "iPhone",
-                    "SymbianOS", "Windows Phone",
-                    "iPad", "iPod"];
-            Agents.forEach(item => {
-                if(userAgentInfo.indexOf(item) > 0) {
-                    flag = false;
-                    return;
-                }
-            })
-        }
     },
     created() {
-        this.isMobile();
+        this.getVerifyImg();
     }
 }
 </script>
 <style lang="less" scoped>
+    /deep/ .van-cell {
+        padding: 4px 16px;
+        line-height: 25px;
+    }
+    /deep/ .van-icon {
+        line-height: 100%;
+    }
+    /deep/ .van-icon__image {
+        width: 6em;
+        height: 3em;
+    }
+    svg {
+        width: 1rem;
+    }
     @media screen and(max-width: 1050px) {
         .content {
             height: 4rem !important;
+        }
+        /deep/ .van-cell {
+            line-height: 35px;
         }
     }
     @media screen and(max-width: 780px) {
@@ -114,6 +186,9 @@ export default {
         }
         .register {
             font-size: .18rem !important;
+        }
+        /deep/ .van-cell {
+            line-height: 120px;
         }
     }
     .login {

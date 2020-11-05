@@ -14,10 +14,14 @@ import '@/assets/css/index.css'
 //引入rem适配
 import 'amfe-flexible'
 
-Vue.config.productionTip = false
+import http from "@/assets/js/http.js"
 
+Vue.config.productionTip = false
 new Vue({
   router,
   store,
-  render: h => h(App)
+  render: h => h(App),
+  created() {
+    Vue.prototype.$axios = http.call(this);
+  }
 }).$mount('#app')

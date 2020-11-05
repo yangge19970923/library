@@ -45,6 +45,7 @@ export default {
           this.$router.push("/home",() => {},(e) => {});
       },
       gongNengClick(item) {
+          console.log(item);
           this.$router.push(item.url,() => {},(e) => {});
       },
       search() {

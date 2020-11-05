@@ -1,11 +1,11 @@
 <template>
     <div class="book-list">
-      <div class="list" v-for="(item, index) in bookLists" :key="item.id">
+      <div class="list" v-for="(item, index) in bookLists" :key="item.urlId">
         <div class="img">
-          <el-image :src="item.imgUrl" alt="" lazy></el-image>
+          <el-image :src="item.imgSrc" alt="" lazy></el-image>
         </div>
         <div class="info" @click="goNovelDetail(item)">
-          <p class="name">{{item.name}}</p>
+          <p class="name">{{item.novelName}}</p>
           <p class="author">{{item.author}}</p>
           <p class="synopsis">{{item.synopsis.length > 30 ? item.synopsis.slice(0,30) + '...' : item.synopsis}}</p>
         </div>
@@ -17,37 +17,68 @@
     </div>
 </template>
 <script>
+import { mapState } from "vuex";
 export default {
   data() {
     return {
-      bookLists:[
-        {
-          id:1,
-          name:'三寸人间',
-          author:'耳根',
-          synopsis:'举头三尺无神明，掌心三寸是人间。这是耳根继《仙逆》《求魔》《我欲封天》《一念永恒》后，创作的第五部长篇小说《三寸人间》。',
-          imgUrl:require('@/assets/img/bookList1.jpg'),
-          collectionColorShow: false
-        },
-        {
-          id:2,
-          name:'三寸人间',
-          author:'耳根',
-          synopsis:'举头三尺无神明，掌心三寸是人间。这是耳根继《仙逆》《求魔》《我欲封天》《一念永恒》后，创作的第五部长篇小说《三寸人间》。',
-          imgUrl:require('@/assets/img/bookList1.jpg'),
-          collectionColorShow: false
-        }
-      ],
+      bookLists:[],
       collectionColorShow: false,
     }
   },
+  computed: {
+    ...mapState({
+      userInfo: ({ user }) => user.userInfo,
+    })
+  },
   methods:{
+    getType(info) {
+      if(info.type === 0) {
+        this.getBookList();
+      }else if(info.type === 1) {
+        this.getBookList2(info.info.href);
+      }
+    },
+    getBookList() {
+      this.$axios.get("novel/recommend",{params: {idCardNumber: this.userInfo.idCardNumber}}).then(res => {
+        if(res.result.novelInfo.length) {
+          this.bookLists = res.result.novelInfo;
+        }
+      })
+    },
+    getBookList2(href) {
+      this.$axios.get("novel/classDetail",{
+        params: {
+          href, 
+          idCardNumber: this.userInfo.idCardNumber}})
+        .then(res => {
+          if(res.result.novelInfo.length) {
+            this.bookLists = res.result.novelInfo;
+          }
+        }).catch(err => {})
+    },
     collection(item) {
       item.collectionColorShow = !item.collectionColorShow;
+      if(item.collectionColorShow) {
+        this.$axios.post("user/collectNovel",{
+          idCardNumber: this.userInfo.idCardNumber,
+          novelInfoItem: item
+        }).then(res => {
+          console.log(res);
+        }).catch(err => {})
+      }else {
+        this.$axios.post("user/cancelCollectNovel",{
+          idCardNumber: this.userInfo.idCardNumber,
+          novelInfoItem: item
+        }).then(res => {
+          console.log(res);
+        }).catch(err => {})
+      }
     },
     goNovelDetail(item) {
-      this.$router.push({name:"NovelDetail",params:{bookInfo:item}});
+      this.$router.push({name:"NovelDetail",query:{info: JSON.stringify(item)}});
     }
+  },
+  created() {
   }
 }
 </script>

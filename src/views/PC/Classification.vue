@@ -2,11 +2,11 @@
     <div class="classification">
         <ContentHeader :title="title"/>
         <div class="content">
-            <div class="classItem" v-for="item in classif" 
+            <div class="classItem" v-for="(item, index) in classif" 
             :key="item.id" 
-            :style="{backgroundImage:'url('+ item.imgUrl +')'}"
+            :style="{backgroundImage:'url('+ imgUrlArr[index].imgUrl +')'}"
             @click="goWapSort(item)">
-                <p><span>{{ item.name }}</span></p>
+                <p><span>{{ item.title }}</span></p>
             </div>
         </div>
     </div>
@@ -20,49 +20,51 @@ export default {
     data() {
         return {
             title: 'Classification',
-            classif:[
+            imgUrlArr:[
                 {
                     id: 1,
-                    name:'玄幻',
                     imgUrl:require('@/assets/img/classif1.png'),
                 },
                 {
                     id: 2,
-                    name:'仙侠',
                     imgUrl:require('@/assets/img/classif2.png'),
                 },
                 {
                     id: 3,
-                    name:'都市',
                     imgUrl:require('@/assets/img/classif3.png'),
                 },
                 {
                     id: 4,
-                    name:'历史',
                     imgUrl:require('@/assets/img/classif4.png'),
                 },
                 {
                     id: 5,
-                    name:'网游',
                     imgUrl:require('@/assets/img/classif5.png'),
                 },
                 {
                     id: 6,
-                    name:'科幻',
                     imgUrl:require('@/assets/img/classif6.png'),
                 },
                 {
                     id: 7,
-                    name:'其他',
                     imgUrl:require('@/assets/img/classif7.png'),
                 }
-            ]
+            ],
+            classif: []
         }
     },
     methods:{
         goWapSort(item) {
             this.$router.push({name:'Wapsort',query:{classification: JSON.stringify(item)}},() => {},err => {});
         },
+        getClassification() {
+            this.$axios.get("novel/classification").then(res => {
+                this.classif = res.result;
+            }).catch(err => {console.log(err);})
+        }
+    },
+    created() {
+        this.getClassification();
     }
 }
 </script>

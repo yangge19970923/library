@@ -18,10 +18,35 @@ export default {
  },
  data() {
    return {
+     
    }
  },
+ methods: {
+   //判断是移动端打开还是pc端,true是pc端，false移动端
+    isMobile() {
+        let flag = true; 
+        let userAgentInfo = navigator.userAgent;
+        let Agents = ["Android", "iPhone",
+                "SymbianOS", "Windows Phone",
+                "iPad", "iPod"];
+        Agents.forEach(item => {
+            if(userAgentInfo.indexOf(item) > 0) {
+                flag = false;
+                return;
+            }
+        })
+        this.$axios.get("/pubilc/isMobile",{params: {
+            isMobile: flag
+        }}).then(res => {
+            if(res.data) {
+                this.SET_MOBILEFLAG(res.data.isMobile);
+            }
+        }).catch(err => {
+        })
+    }
+ },
  created() {
-   
+   this.isMobile();
  },
 }
 </script>
@@ -47,6 +72,9 @@ export default {
 .el-header {
   background-color: #f8f8f8;
   padding: 0 !important;
+}
+.el-main {
+  overflow: visible !important;
 }
 
 </style>

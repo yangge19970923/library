@@ -4,10 +4,10 @@
     <div class="book-list">
       <div class="list" v-for="(item, index) in bookLists" :key="item.id">
         <div class="img">
-          <el-image :src="item.imgUrl" alt="" lazy></el-image>
+          <el-image :src="item.imgSrc" alt="" lazy></el-image>
         </div>
         <div class="info" @click="goNovelDetail(item)">
-          <p class="name">{{item.name}}</p>
+          <p class="name">{{item.novelName}}</p>
           <p class="author">{{item.author}}</p>
           <p class="synopsis">{{item.synopsis.length > 30 ? item.synopsis.slice(0,30) + '...' : item.synopsis}}</p>
         </div>
@@ -21,39 +21,41 @@
 
 <script>
 import ContentHeader from "@/components/contentHeader.vue";
+import { mapState } from "vuex";
 export default {
   name: 'Home',
   components: {
     ContentHeader
   },
+  computed: {
+    ...mapState ({
+      userInfo: ({ user }) => user.userInfo,
+    })
+  },
   data() {
     return {
       title:'Book Shelf',
-      bookLists:[
-        {
-          id:1,
-          name:'三寸人间',
-          author:'耳根',
-          synopsis:'举头三尺无神明，掌心三寸是人间。这是耳根继《仙逆》《求魔》《我欲封天》《一念永恒》后，创作的第五部长篇小说《三寸人间》。',
-          imgUrl:require('@/assets/img/bookList1.jpg'),
-          collectionColorShow: false
-        },
-        {
-          id:2,
-          name:'三寸人间',
-          author:'耳根',
-          synopsis:'举头三尺无神明，掌心三寸是人间。这是耳根继《仙逆》《求魔》《我欲封天》《一念永恒》后，创作的第五部长篇小说《三寸人间》。',
-          imgUrl:require('@/assets/img/bookList1.jpg'),
-          collectionColorShow: false
-        }
-      ],
-      collectionColorShow: false,
+      bookLists:[]
     }
   },
   methods:{
+    getBookList(){
+      this.$axios.get("novel/findCollectNovel", {
+        params: {
+          idCardNumber: this.userInfo.idCardNumber
+        }
+      }).then(res => {
+        if(res) {
+          this.bookLists = res.novelInfo;
+        }
+      }).catch(err => {})
+    },
     goNovelDetail(item) {
       this.$router.push({name:"NovelDetail",params:{bookInfo:item}});
     },
+  },
+  created() {
+    this.getBookList();
   }
 }
 </script>
